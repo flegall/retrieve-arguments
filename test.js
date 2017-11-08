@@ -1,9 +1,30 @@
+"use strict";
+
 var retrieveArguments = require('./index.js'),
   assert = require('assert');
 
+class MyClass {
+  method(arg1, arg2) {
+  }
+  static staticMethod(arg1, arg2) {
+  }
+}
 function namedFunction(name) {}
 describe('retrieve-arguments', function() {
-  var funcNoArgs, funcOneArgs, funcTwoArgs, funcOneLineCallingNoArgs, funcOneLineCallingTwoArgs;
+  var
+    funcNoArgs,
+    funcOneArgs,
+    funcTwoArgs,
+    funcOneLineCallingNoArgs,
+    funcOneLineCallingTwoArgs,
+    es6funcNoArgs,
+    es6funcOneArgs,
+    es6funcTwoArgs,
+    es6funcOneLineCallingNoArgs,
+    es6funcOneLineCallingTwoArgs,
+    es6Method,
+    es6StaticMethod;
+
   beforeEach(function() {
     funcNoArgs = function() {};
 
@@ -24,6 +45,10 @@ describe('retrieve-arguments', function() {
     es6funcOneLineCallingNoArgs = (arg1, arg2) => { return es6funcNoArgs(); };
 
     es6funcOneLineCallingTwoArgs = (arg1, arg2) => { return es6funcTwoArgs(arg1, arg2, 'stuff'); };
+
+    es6Method = MyClass.prototype.method;
+
+    es6StaticMethod = MyClass.staticMethod;
   });
 
   it('should fail if no function given', function() {
@@ -60,5 +85,13 @@ describe('retrieve-arguments', function() {
   it('should work with one-line ES6 functions that call other functions', function() {
     assert.deepEqual(retrieveArguments(es6funcOneLineCallingNoArgs), ['arg1', 'arg2']);
     assert.deepEqual(retrieveArguments(es6funcOneLineCallingTwoArgs), ['arg1', 'arg2']);
+  });
+
+  it('should work with ES6 methods', function () {
+    assert.deepEqual(retrieveArguments(es6Method), ['arg1', 'arg2']);
+  });
+
+  it('should work with ES6 static methods', function () {
+    assert.deepEqual(retrieveArguments(es6StaticMethod), ['arg1', 'arg2']);
   });
 });

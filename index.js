@@ -3,7 +3,7 @@ module.exports = function(theFunction) {
     throw new Error('No function given.');
   }
   var functionString = theFunction.toString(),
-    matchedArguments = functionString.match(/^(function[^(]*)?\(([^)]*)\)/)[2]
+    matchedArguments = functionString.match(/^([^(]*)?\(([^)]*)\)/)[2]
       .split(',')
       .map(trim)
       .filter(flatten);
